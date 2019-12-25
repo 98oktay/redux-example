@@ -1,8 +1,10 @@
 import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from '@fortawesome/free-solid-svg-icons'
+import {connect} from "react-redux";
+import {removeUser, selectUser} from "../../actions";
 
-export default class Listing extends React.Component {
+class Listing extends React.Component {
 
     state = {
         items: [
@@ -10,7 +12,22 @@ export default class Listing extends React.Component {
         ]
     };
 
+    getUsers = () => {
+        const filterText = this.props.filterText;
+        const users = !filterText ? this.props.users : this.props.users.filter((user) => {
+            const userFullName = `${user.first} ${user.last} ${user.age}`;
+            if (userFullName.indexOf(filterText) !== -1) {
+                return true
+            }
+            return false
+        });
+
+        return users;
+    };
+
     render() {
+        const users = this.getUsers();
+
         return <><h4>Listing</h4>
             <div className="card border-success">
                 <table className="table table-striped table-borderless table-sm">
@@ -24,7 +41,7 @@ export default class Listing extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {this.state.items.map((item, key) =>
+                    {users.map((item, key) =>
                         <tr key={key}>
                             <th scope="row">{key}</th>
                             <td>{item.first}</td>
@@ -32,12 +49,14 @@ export default class Listing extends React.Component {
                             <td>{item.age}</td>
                             <td width="150">
                                 <div className="d-flex">
-                                <button type="button" className="btn btn-primary btn-sm">
-                                    <FontAwesomeIcon icon={Icons.faEdit}/> Edit
-                                </button>
-                                <button type="button" className="btn btn-danger btn-sm ml-auto">
-                                    <FontAwesomeIcon icon={Icons.faTrash}/> Del
-                                </button>
+                                    <button type="button" onClick={() => this.props.selectUser(key)}
+                                            className="btn btn-primary btn-sm">
+                                        <FontAwesomeIcon icon={Icons.faEdit}/> Edit
+                                    </button>
+                                    <button type="button" onClick={() => this.props.removeUser(key)}
+                                            className="btn btn-danger btn-sm ml-auto">
+                                        <FontAwesomeIcon icon={Icons.faTrash}/> Del
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -48,3 +67,9 @@ export default class Listing extends React.Component {
         </>
     }
 }
+
+const mapStateToProps = state => {
+    return state;
+};
+export default connect(mapStateToProps, {removeUser, selectUser})(Listing);
+
