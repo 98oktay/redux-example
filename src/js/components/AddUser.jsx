@@ -1,6 +1,8 @@
 import React from "react";
+import {connect} from "react-redux";
+import {addUser} from "../actions";
 
-export default class AddUser extends React.Component {
+class AddUser extends React.Component {
 
     state = {
         first: "",
@@ -8,12 +10,24 @@ export default class AddUser extends React.Component {
         age: 10
     };
 
+
+    saveUser = () => {
+
+        this.props.addUser(this.state);
+        this.setState({
+            first: "",
+            last: "",
+            age: 10
+        })
+
+    };
+
     render() {
         const {first, last, age} = this.state;
         return <div className="card border-primary mb-3">
             <div className="card-header d-flex flex-row align-items-center">
                 Add New User
-                <button className="btn btn-primary ml-auto">Save</button>
+                <button onClick={this.saveUser} className="btn btn-primary ml-auto">Save</button>
             </div>
             <form className="card-body">
                 <div className="form-group">
@@ -36,3 +50,10 @@ export default class AddUser extends React.Component {
         </div>
     }
 }
+
+
+const mapStateToProps = (state) => {
+    return state;
+};
+
+export default connect(mapStateToProps, {addUser})(AddUser);

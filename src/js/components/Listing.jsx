@@ -1,20 +1,13 @@
 import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as Icons from '@fortawesome/free-solid-svg-icons'
+import {connect} from "react-redux";
+import {deleteUser} from "../actions";
 
-export default class Listing extends React.Component {
-
-    state = {
-        users: [
-            {first: "Oktay", last: "Başkuş", age: 30},
-            {first: "Veronica", last: "Joseph", age: 34},
-            {first: "Lindsay", last: "Holt", age: 25},
-            {first: "Morris", last: "Castaneda", age: 35}
-        ]
-    };
+class Listing extends React.Component {
 
     render() {
-        const users = this.state.users;
+        const users = this.props.users;
         return <><h4>Listing</h4>
             <div className="card border-success">
                 <table className="table table-striped table-borderless table-sm">
@@ -40,7 +33,7 @@ export default class Listing extends React.Component {
                                 <button type="button" className="btn btn-primary btn-sm">
                                     <FontAwesomeIcon icon={Icons.faEdit}/> Edit
                                 </button>
-                                <button type="button" className="btn btn-danger btn-sm ml-auto">
+                                <button type="button" onClick={()=>this.props.deleteUser(key)} className="btn btn-danger btn-sm ml-auto">
                                     <FontAwesomeIcon icon={Icons.faTrash}/> Del
                                 </button>
                                 </div>
@@ -53,3 +46,12 @@ export default class Listing extends React.Component {
         </>
     }
 }
+
+
+const mapStateToProps =(state)=>{
+    return {
+        users : state.users
+    };
+};
+
+export default connect(mapStateToProps, {deleteUser})(Listing);
